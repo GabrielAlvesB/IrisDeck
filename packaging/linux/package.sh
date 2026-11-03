@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build and package DeckCraft for Linux (<arch> is x86_64 or aarch64, or riscv64 when cross-compiling):
+# Build and package IrisDeck for Linux (<arch> is x86_64 or aarch64, or riscv64 when cross-compiling):
 #
 #   $DIST/deckcraft-<version>-linux-<arch>.AppImage  any distro with glibc >= the build host's
 #   $DIST/deckcraft-<version>-linux-<arch>.AppImage.zsync  delta updates (needs zsyncmake)
@@ -17,7 +17,7 @@ set -euo pipefail
 # shellcheck source=../common.sh
 . "$(dirname "${BASH_SOURCE[0]}")/../common.sh"
 HERE="$ROOT/packaging/linux"
-APP_ID=ai.storyteller.deckcraft
+APP_ID=com.iris.irisdeck
 
 verify_sha256() {
   local expected="$1"
@@ -43,10 +43,10 @@ case "$ARCH" in
   aarch64 | arm64) ARCH=aarch64; DEB_ARCH=arm64 ;;
   *) echo "unsupported architecture $ARCH" >&2; exit 2 ;;
 esac
-export DECKCRAFT_MAINTAINER="${DECKCRAFT_MAINTAINER:-DeckCraft maintainers <deckcraft@storyteller.ai>}"
+export DECKCRAFT_MAINTAINER="${DECKCRAFT_MAINTAINER:-IrisDeck maintainers <deckcraft@storyteller.ai>}"
 BASENAME="deckcraft-$VERSION-linux-$ARCH"
 
-echo "==> DeckCraft $VERSION for Linux $ARCH ($FORMATS)"
+echo "==> IrisDeck $VERSION for Linux $ARCH ($FORMATS)"
 
 if [[ "$SKIP_BUILD" = 0 ]]; then
   if [[ -n "${CROSS_TARGET:-}" ]]; then
@@ -125,7 +125,7 @@ if has appimage; then
     echo "no pinned AppImage runtime for $ARCH; build the AppImage on x86_64 or aarch64" >&2
     exit 2
   fi
-  APPDIR="$WORK/DeckCraft.AppDir"
+  APPDIR="$WORK/IrisDeck.AppDir"
   cp -R "$STAGE" "$APPDIR"
   ln -s usr/bin/deckcraft "$APPDIR/AppRun"
   cp "$HERE/$APP_ID.desktop" "$APPDIR/$APP_ID.desktop"
@@ -170,7 +170,7 @@ if has appimage; then
   # fetch only the blocks that changed in a newer release, through the .zsync published next to
   # each AppImage on GitHub Releases. `latest` is the newest published release that is not a
   # pre-release. A fork's builds point at its own releases through GITHUB_REPOSITORY.
-  REPO="${GITHUB_REPOSITORY:-storytold/deckcraft}"
+  REPO="${GITHUB_REPOSITORY:-GabrielAlvesB/IrisDeck}"
   UPDATE_INFO="gh-releases-zsync|${REPO%%/*}|${REPO#*/}|latest|deckcraft-*-linux-$ARCH.AppImage.zsync"
   # Extract-and-run: works without FUSE (containers, CI). The output embeds the static runtime,
   # so users don't need libfuse2 either. With zsyncmake on the host (CI installs the zsync

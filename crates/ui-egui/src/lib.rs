@@ -1,4 +1,4 @@
-//! DeckCraft's egui frontend: a PowerPoint-style UI over `deckcraft-engine`.
+//! IrisDeck's egui frontend: a PowerPoint-style UI over `deckcraft-engine`.
 //!
 //! The UI is thin: every action goes through [`SlideApp::run`], which handles UI commands
 //! (views, panes, zoom) here and sends everything else to the engine. The ribbon, menus,
@@ -6,12 +6,17 @@
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 #![forbid(unsafe_code)]
 
-/// DeckCraft as craft-update knows it, with its 128 px icon and accent colour: the update
-/// prompt shows both, and an AppImage's menu entry gets the icon.
+/// IrisDeck as craft-update knows it, with its 128 px icon and accent colour: the update
+/// prompt shows both, and an AppImage's menu entry gets the icon. Updates come from IrisDeck's
+/// own releases (`repo`, compared case-sensitively), never DeckCraft's: the rest of
+/// `suite::DECKCRAFT` (asset names, binaries) is kept because the release files keep those names.
 #[cfg(not(target_arch = "wasm32"))]
 pub const UPDATE_APP: craft_update::app::App = craft_update::app::App {
-    icon_png: Some(include_bytes!("../../../assets/app-icon/hicolor/128x128/apps/ai.storyteller.deckcraft.png")),
-    accent: Some([0xf0, 0x7a, 0x1e]),
+    icon_png: Some(include_bytes!("../../../assets/app-icon/hicolor/128x128/apps/com.iris.irisdeck.png")),
+    accent: Some([0xd4, 0x5a, 0x00]),
+    name: "IrisDeck",
+    repo: "GabrielAlvesB/IrisDeck",
+    developer: "Gabriel Alves Tech",
     ..craft_update::suite::DECKCRAFT
 };
 
@@ -137,7 +142,7 @@ pub const UI_COMMANDS: &[(&str, &str, Option<&str>, &str)] = &[
         Some("Cmd+P"),
         "{layout?, perPage?, slides?, includeHidden?, frame?, paper?: letter|a4|legal|a3, orientation?: portrait|landscape}",
     ),
-    ("app.about", "About DeckCraft", None, "{}"),
+    ("app.about", "About IrisDeck", None, "{}"),
     ("app.checkUpdates", "Check for Updates…", None, "{}"),
     ("app.palette", "Command Palette", Some("Cmd+Shift+P"), "{}"),
     ("app.preferences", "Preferences…", Some("Cmd+,"), "{}"),
@@ -157,7 +162,7 @@ pub const UI_COMMANDS: &[(&str, &str, Option<&str>, &str)] = &[
     ("app.qat", "Quick Access Toolbar", None, "{add: command id, params?, label?, icon?} | {remove: id, params?} | {reset: true} → [buttons]"),
     ("app.find", "Find…", Some("Cmd+F"), "{}"),
     ("app.replace", "Replace…", Some("Cmd+H"), "{}"),
-    ("app.links", "Community Links", None, "{}"),
+    ("app.links", "Project Links", None, "{}"),
 ];
 
 pub struct Perf {

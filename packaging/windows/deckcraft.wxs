@@ -3,28 +3,28 @@
   <?ifndef HasCraftFontLicences ?>
   <?define HasCraftFontLicences=0 ?>
   <?endif?>
-  <Package Name="DeckCraft" Manufacturer="Learning Machines LLC" Version="$(var.Version)" UpgradeCode="6F9C69E7-7825-40D2-BF26-C274DA676425" Scope="perUserOrMachine" Compressed="yes" Language="1033">
-    <SummaryInformation Description="DeckCraft presentations and slide shows" Manufacturer="Learning Machines LLC" />
+  <Package Name="IrisDeck" Manufacturer="Gabriel Alves Tech" Version="$(var.Version)" UpgradeCode="710942A5-BF4E-40C3-B7A3-58FEEEB8343E" Scope="perUserOrMachine" Compressed="yes" Language="1033">
+    <SummaryInformation Description="IrisDeck presentations and slide shows" Manufacturer="Gabriel Alves Tech" />
     <?include $(sys.SOURCEFILEDIR)install-policy.wxi?>
     <!-- Same-version upgrades let successive pre-releases of one X.Y.Z replace each other
          (MSI versions are numeric, so 1.2.3-rc.1 and 1.2.3-rc.2 are both 1.2.3). -->
-    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of DeckCraft is already installed." />
+    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of IrisDeck is already installed." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
 
     <Icon Id="DeckcraftIcon.ico" SourceFile="$(var.IconPath)" />
     <Property Id="ARPPRODUCTICON" Value="DeckcraftIcon.ico" />
-    <Property Id="ARPURLINFOABOUT" Value="https://getartcraft.com/apps/deckcraft" />
-    <Property Id="ARPURLUPDATEINFO" Value="https://getartcraft.com/apps/deckcraft" />
-    <Property Id="ARPHELPLINK" Value="https://discord.gg/artcraft" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/GabrielAlvesB/IrisDeck" />
+    <Property Id="ARPURLUPDATEINFO" Value="https://github.com/GabrielAlvesB/IrisDeck" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/GabrielAlvesB/IrisDeck/issues" />
 
     <StandardDirectory Id="ProgramFiles6432Folder">
-      <Directory Id="CraftSuiteFolder" Name="ArtCraft">
-        <Directory Id="INSTALLFOLDER" Name="DeckCraft" />
+      <Directory Id="CraftSuiteFolder" Name="Iris">
+        <Directory Id="INSTALLFOLDER" Name="IrisDeck" />
       </Directory>
     </StandardDirectory>
     <StandardDirectory Id="ProgramMenuFolder" />
 
-    <Feature Id="Main" Title="DeckCraft" Level="1">
+    <Feature Id="Main" Title="IrisDeck" Level="1">
       <?if $(var.HasCraftFontLicences) = 1 ?>
       <ComponentGroupRef Id="CraftFontLicences" />
       <?endif?>
@@ -44,7 +44,7 @@
     </ComponentGroup>
     <?endif?>
     <ComponentGroup Id="DeckcraftFiles" Directory="INSTALLFOLDER">
-      <Component Id="DeckcraftApp" Guid="D87EA444-41A4-4C19-922E-66D1A29461FF">
+      <Component Id="DeckcraftApp" Guid="E484262F-3393-4499-8C9D-344DD5BB0E98">
         <File Id="DeckcraftNotice" Source="$(var.BinDir)\NOTICE" KeyPath="no" />
         <File Id="DeckcraftExe" Source="$(var.BinDir)\deckcraft.exe" KeyPath="yes">
           <!-- No Icon here, so the shortcut shows the icon embedded in deckcraft.exe (build.rs). An
@@ -54,29 +54,29 @@
                pointing at the deleted file and lost its icon (#1114). The exe's path survives
                updates; the shortcut is not advertised, so it targets that path and its icon is the
                exe's own. The Icon above stays for ARPPRODUCTICON (Apps and features). -->
-          <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="DeckCraft" Description="DeckCraft presentations and slide shows" WorkingDirectory="INSTALLFOLDER" Advertise="no" />
+          <Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="IrisDeck" Description="IrisDeck presentations and slide shows" WorkingDirectory="INSTALLFOLDER" Advertise="no" />
         </File>
 
-        <!-- .deckcraft: DeckCraft's own format. -->
-        <ProgId Id="DeckCraft.Presentation" Description="DeckCraft Presentation" Icon="DeckcraftExe" IconIndex="0">
+        <!-- .deckcraft: IrisDeck's own format. -->
+        <ProgId Id="IrisDeck.Presentation" Description="IrisDeck Presentation" Icon="DeckcraftExe" IconIndex="0">
           <Extension Id="deckcraft" ContentType="application/x-deckcraft">
             <Verb Id="open" Command="Open" TargetFile="DeckcraftExe" Argument="&quot;%1&quot;" />
           </Extension>
         </ProgId>
 
         <!-- "Open with" for PowerPoint formats, without becoming the default. -->
-        <RegistryValue Root="HKMU" Key="Software\Classes\Applications\deckcraft.exe" Name="FriendlyAppName" Value="DeckCraft" Type="string" />
+        <RegistryValue Root="HKMU" Key="Software\Classes\Applications\deckcraft.exe" Name="FriendlyAppName" Value="IrisDeck" Type="string" />
         <RegistryValue Root="HKMU" Key="Software\Classes\Applications\deckcraft.exe\shell\open\command" Value="&quot;[#DeckcraftExe]&quot; &quot;%1&quot;" Type="string" />
         <RegistryValue Root="HKMU" Key="Software\Classes\Applications\deckcraft.exe\SupportedTypes" Name=".deckcraft" Value="" Type="string" />
         <RegistryValue Root="HKMU" Key="Software\Classes\Applications\deckcraft.exe\SupportedTypes" Name=".pptx" Value="" Type="string" />
         <RegistryValue Root="HKMU" Key="Software\Classes\Applications\deckcraft.exe\SupportedTypes" Name=".potx" Value="" Type="string" />
         <RegistryValue Root="HKMU" Key="Software\Classes\Applications\deckcraft.exe\SupportedTypes" Name=".ppsx" Value="" Type="string" />
-        <RegistryValue Root="HKMU" Key="Software\Classes\.pptx\OpenWithProgids" Name="DeckCraft.Presentation" Value="" Type="string" />
-        <RegistryValue Root="HKMU" Key="Software\Classes\.potx\OpenWithProgids" Name="DeckCraft.Presentation" Value="" Type="string" />
-        <RegistryValue Root="HKMU" Key="Software\Classes\.ppsx\OpenWithProgids" Name="DeckCraft.Presentation" Value="" Type="string" />
+        <RegistryValue Root="HKMU" Key="Software\Classes\.pptx\OpenWithProgids" Name="IrisDeck.Presentation" Value="" Type="string" />
+        <RegistryValue Root="HKMU" Key="Software\Classes\.potx\OpenWithProgids" Name="IrisDeck.Presentation" Value="" Type="string" />
+        <RegistryValue Root="HKMU" Key="Software\Classes\.ppsx\OpenWithProgids" Name="IrisDeck.Presentation" Value="" Type="string" />
 
         <RegistryValue Root="HKMU" Key="Software\Microsoft\Windows\CurrentVersion\App Paths\deckcraft.exe" Value="[#DeckcraftExe]" Type="string" />
-      <RegistryValue Root="HKMU" Key="Software\DeckCraft" Name="InstallDir" Value="[INSTALLFOLDER]" Type="string" />
+      <RegistryValue Root="HKMU" Key="Software\IrisDeck" Name="InstallDir" Value="[INSTALLFOLDER]" Type="string" />
       </Component>
 
       <Component Id="DeckcraftCli">

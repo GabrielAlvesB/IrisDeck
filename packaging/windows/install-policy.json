@@ -1,7 +1,7 @@
 {
   "id": "deckcraft",
-  "name": "DeckCraft",
-  "upgradeCode": "6F9C69E7-7825-40D2-BF26-C274DA676425",
+  "name": "IrisDeck",
+  "upgradeCode": "710942A5-BF4E-40C3-B7A3-58FEEEB8343E",
   "sources": [
     "deckcraft.wxs"
   ],
@@ -20,7 +20,7 @@
       "-1",
       "Software\\Classes\\Applications\\deckcraft.exe",
       "FriendlyAppName",
-      "DeckCraft"
+      "IrisDeck"
     ],
     [
       "-1",
@@ -55,19 +55,19 @@
     [
       "-1",
       "Software\\Classes\\.pptx\\OpenWithProgids",
-      "DeckCraft.Presentation",
+      "IrisDeck.Presentation",
       ""
     ],
     [
       "-1",
       "Software\\Classes\\.potx\\OpenWithProgids",
-      "DeckCraft.Presentation",
+      "IrisDeck.Presentation",
       ""
     ],
     [
       "-1",
       "Software\\Classes\\.ppsx\\OpenWithProgids",
-      "DeckCraft.Presentation",
+      "IrisDeck.Presentation",
       ""
     ],
     [

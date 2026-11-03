@@ -1,11 +1,13 @@
-DeckCraft
+IrisDeck
+Based on DeckCraft (https://github.com/storytold/deckcraft), modified and rebranded for the
+Iris ecosystem by Gabriel Alves Tech.
+
 Copyright (c) 2026 ArtCraft Team and the DeckCraft contributors.
 Licensed under the MIT License or the Apache License, Version 2.0, at your option
 (LICENSE-MIT, LICENSE-APACHE).
 
-The ArtCraft name, wordmark and logos in docs/brand/ are trademarks of the ArtCraft Team. They are
-not open source and are not covered by the license above; their terms are in
-docs/brand/LICENSE-brand.txt.
+The Iris name and icon (assets/app-icon/) belong to Gabriel Alves Tech and are not covered by
+the license above. IrisDeck is not made, sponsored or endorsed by the ArtCraft Team.
 
 Third-party material
 

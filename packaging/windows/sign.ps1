@@ -15,7 +15,7 @@
   timestamp server, ...). Optional overrides: WINDOWS_TIMESTAMP_URL, SIGNTOOL (path to signtool.exe).
 
 .EXAMPLE
-  pwsh packaging/windows/sign.ps1 dist/deckcraft.exe dist/Deckcraft.msi
+  pwsh packaging/windows/sign.ps1 dist/deckcraft.exe dist/deckcraft.msi
 #>
 param(
   [Parameter(Mandatory = $true, ValueFromRemainingArguments = $true)]
@@ -55,7 +55,7 @@ if (-not $haveCert -and -not $haveAzure) {
 }
 
 $script:SignTool = Find-SignTool
-$common = @('sign', '/v', '/fd', 'SHA256', '/td', 'SHA256', '/d', 'DeckCraft', '/du', 'https://github.com/storytold/deckcraft')
+$common = @('sign', '/v', '/fd', 'SHA256', '/td', 'SHA256', '/d', 'IrisDeck', '/du', 'https://github.com/GabrielAlvesB/IrisDeck')
 $tmp = Join-Path ([IO.Path]::GetTempPath()) "deckcraft-sign-$([IO.Path]::GetRandomFileName())"
 New-Item -ItemType Directory -Path $tmp | Out-Null
 

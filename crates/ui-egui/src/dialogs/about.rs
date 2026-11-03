@@ -20,15 +20,16 @@ pub fn about(_app: &mut SlideApp, ui: &mut Ui) {
     ui.vertical_centered(|ui| {
         let (r, _) = ui.allocate_exact_size(vec2(64.0, 64.0), Sense::hover());
         paint_logo(ui.painter(), r);
-        ui.label(egui::RichText::new("DeckCraft").font(theme::bold(22.0)));
+        ui.label(egui::RichText::new("IrisDeck").font(theme::bold(22.0)));
         ui.label(egui::RichText::new(version_line()).color(t.text_dim));
         ui.add_space(6.0);
         ui.label("Presentations and slide shows, rebuilt from scratch in pure Rust.");
         ui.label("An open-source, clean-room project. Not affiliated with Microsoft.");
         ui.add_space(6.0);
-        ui.hyperlink_to("Join our community on Discord", deckcraft_engine::links::DISCORD);
-        ui.hyperlink_to("getartcraft.com/apps/deckcraft", deckcraft_engine::links::APP_PAGE);
-        ui.hyperlink_to("Source on GitHub", deckcraft_engine::links::GITHUB);
+        ui.label("Part of the Iris ecosystem. Based on DeckCraft by the ArtCraft team.");
+        ui.add_space(6.0);
+        ui.hyperlink_to("Source code: github.com/GabrielAlvesB/IrisDeck", deckcraft_engine::links::GITHUB);
+        ui.hyperlink_to("Original project: github.com/storytold/deckcraft", deckcraft_engine::links::UPSTREAM);
         ui.add_space(6.0);
         ui.label(egui::RichText::new("MIT OR Apache-2.0 · © 2026 ArtCraft Team and the DeckCraft contributors").size(11.0).color(t.text_faint));
     });
@@ -49,20 +50,45 @@ pub fn version_line() -> String {
     s
 }
 
-/// DeckCraft's mark, drawn in code: a slide card with a play triangle in our orange.
+/// IrisDeck's mark, drawn in code: the app icon (`assets/app-icon/deckcraft.svg`, the Iris
+/// Workspace drawing): a slide on an easel, with a title, two lines of text and a pie chart, on
+/// an orange tile (`#ee5f00` → `#b07400`). Coordinates are the icon's 64-unit viewBox.
 pub fn paint_logo(p: &egui::Painter, r: Rect) {
-    let orange = Color32::from_rgb(0xF2, 0x6B, 0x1D);
-    let deep = Color32::from_rgb(0xC2, 0x4E, 0x14);
-    let card = r.shrink(r.width() * 0.08);
-    p.rect_filled(card.translate(vec2(r.width() * 0.04, r.width() * 0.05)), CornerRadius::same((r.width() * 0.14) as u8), deep);
-    p.rect_filled(card, CornerRadius::same((r.width() * 0.14) as u8), orange);
-    let c = card.center();
-    let s = card.width() * 0.22;
-    p.add(egui::Shape::convex_polygon(
-        vec![pos2(c.x - s * 0.7, c.y - s), pos2(c.x + s, c.y), pos2(c.x - s * 0.7, c.y + s)],
-        Color32::WHITE,
-        Stroke::NONE,
-    ));
+    let k = r.width() / 64.0;
+    let at = |x: f32, y: f32| pos2(r.min.x + x * k, r.min.y + y * k);
+    let start = Color32::from_rgb(0xEE, 0x5F, 0x00);
+    let end = Color32::from_rgb(0xB0, 0x74, 0x00);
+    let mid = start.lerp_to_gamma(end, 0.5);
+    let tile = Rect::from_min_max(at(4.0, 4.0), at(60.0, 60.0));
+    // The diagonal gradient, drawn as a rounded tile in the middle colour under a mesh fading from
+    // the top-left to the bottom-right colour (inset so the rounded corners stay clean).
+    p.rect_filled(tile, CornerRadius::same((15.0 * k) as u8), mid);
+    let inner = tile.shrink(4.4 * k);
+    let mut mesh = egui::Mesh::default();
+    for (pt, c) in [(inner.left_top(), start), (inner.right_top(), mid), (inner.right_bottom(), end), (inner.left_bottom(), mid)] {
+        mesh.colored_vertex(pt, c);
+    }
+    mesh.add_triangle(0, 1, 2);
+    mesh.add_triangle(0, 2, 3);
+    p.add(egui::Shape::mesh(mesh));
+    let white = Color32::from_white_alpha(242);
+    p.rect_filled(Rect::from_min_max(at(12.0, 14.0), at(52.0, 42.0)), CornerRadius::same((3.5 * k) as u8), white);
+    let leg = Stroke::new(3.0 * k, Color32::WHITE);
+    p.line_segment([at(32.0, 42.0), at(32.0, 48.0)], leg);
+    p.line_segment([at(25.5, 52.5), at(32.0, 48.0)], leg);
+    p.line_segment([at(32.0, 48.0), at(38.5, 52.5)], leg);
+    p.line_segment([at(18.0, 21.5), at(30.0, 21.5)], Stroke::new(3.2 * k, start));
+    let faint = Stroke::new(2.2 * k, start.gamma_multiply(0.55));
+    p.line_segment([at(18.0, 27.5), at(27.0, 27.5)], faint);
+    p.line_segment([at(18.0, 33.0), at(24.0, 33.0)], faint);
+    p.circle_filled(at(40.0, 29.5), 7.0 * k, mid);
+    // The pie's lighter quarter, from 12 o'clock to 3 o'clock.
+    let mut slice = vec![at(40.0, 29.5)];
+    slice.extend((0..=8).map(|i| {
+        let a = std::f32::consts::FRAC_PI_2 * i as f32 / 8.0;
+        at(40.0 + 7.0 * a.sin(), 29.5 - 7.0 * a.cos())
+    }));
+    p.add(egui::Shape::convex_polygon(slice, Color32::from_white_alpha(153), Stroke::NONE));
 }
 
 #[cfg(test)]

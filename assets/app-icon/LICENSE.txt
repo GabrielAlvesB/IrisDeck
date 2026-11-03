@@ -1,0 +1,8 @@
+IrisDeck app icon (deckcraft.svg and every file derived from it in this directory:
+deckcraft-1024.png, deckcraft.icns, deckcraft.ico, hicolor/).
+
+The Iris name and this icon belong to Gabriel Alves Tech. They are part of the Iris brand and are
+not covered by the MIT / Apache-2.0 license of the IrisDeck source code. Forks and modified
+versions must replace them.
+
+The PNGs are rendered from deckcraft.svg; packaging/icons.sh rebuilds the .ico and .icns from them.
