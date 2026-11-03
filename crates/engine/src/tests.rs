@@ -156,7 +156,7 @@ fn editing_text_refits_a_saved_shrink() {
 }
 
 /// After an edit, the shrink-on-overflow scale the layout computes is stored, so the saved file
-/// carries the scale DeckCraft draws instead of a bare normAutofit (#724).
+/// carries the scale IrisDeck draws instead of a bare normAutofit (#724).
 #[test]
 fn editing_shrink_text_stores_the_layout_scale() {
     use deckcraft_model::text::AutoFit;
@@ -169,7 +169,7 @@ fn editing_shrink_text_stores_the_layout_scale() {
     let sh = s.doc().unwrap().shape(id).cloned().unwrap();
     let Some(AutoFit::Shrink { font_scale, line_reduction }) = sh.text.unwrap().body.autofit else { panic!("shrink") };
     assert!(font_scale.is_some_and(|s| s < 1.0), "the computed fit is stored: {font_scale:?} / {line_reduction}");
-    // The saved file must carry the scale DeckCraft draws, so PowerPoint opens it the same way.
+    // The saved file must carry the scale IrisDeck draws, so PowerPoint opens it the same way.
     let bytes = deckcraft_pptx::export(&s.doc().unwrap().doc).unwrap();
     let mut z = zip::ZipArchive::new(std::io::Cursor::new(bytes)).unwrap();
     let mut xml = String::new();
@@ -3747,7 +3747,7 @@ fn smartart_round_trips_through_pptx_as_a_diagram() {
     let bytes = deckcraft_pptx::export(&doc).unwrap();
     let names: Vec<String> = {
         let z = zip::ZipArchive::new(std::io::Cursor::new(&bytes)).unwrap();
-        z.file_names().map(String::from).collect()
+        z.file_names().map(|n| n.unwrap().to_string()).collect()
     };
     for part in ["data1", "layout1", "quickStyle1", "colors1", "drawing1"] {
         assert!(names.iter().any(|n| n == &format!("ppt/diagrams/{part}.xml")), "{part} in {names:?}");
@@ -4514,8 +4514,8 @@ fn autocorrect_options_as_you_type() {
     s.execute("text.autocorrect", &json!({"sentenceCaps": false, "days": false})).unwrap();
     assert_eq!(typed(&mut s, "hello monday "), "hello monday ");
     // Your own entries, and deleting a built-in one.
-    s.execute("text.autocorrect", &json!({"add": ["dc", "DeckCraft"], "remove": "teh"})).unwrap();
-    assert_eq!(typed(&mut s, "dc teh "), "DeckCraft teh ");
+    s.execute("text.autocorrect", &json!({"add": ["dc", "IrisDeck"], "remove": "teh"})).unwrap();
+    assert_eq!(typed(&mut s, "dc teh "), "IrisDeck teh ");
     let v = s.execute("text.autocorrect", &json!({})).unwrap();
     let entries = v["entries"].as_array().unwrap();
     assert!(entries.iter().any(|e| e[0] == "dc"));
@@ -4837,7 +4837,7 @@ fn the_caret_takes_the_colour_of_the_text() {
         empty
     };
     // Dark text on the light theme, light text on the dark one: never black on a dark slide.
-    let (light, dark) = (caret("DeckCraft"), caret("Nocturne"));
+    let (light, dark) = (caret("IrisDeck"), caret("Nocturne"));
     assert!(light.r < 0x60 && light.g < 0x60 && light.b < 0x60, "{light:?}");
     assert!(dark.r > 0xC0 && dark.g > 0xC0 && dark.b > 0xC0, "{dark:?}");
     // Text set to red gets a red caret.
@@ -5322,10 +5322,11 @@ fn opening_a_pptx_with_an_unreadable_slide_says_so() {
         let mut f = zin.by_index(i).unwrap();
         let mut d = vec![];
         f.read_to_end(&mut d).unwrap();
-        if f.name() == "ppt/slides/slide2.xml" {
+        let name = f.name().unwrap().to_string();
+        if name == "ppt/slides/slide2.xml" {
             d = b"<p:sld".to_vec();
         }
-        out.start_file(f.name(), o).unwrap();
+        out.start_file(name, o).unwrap();
         out.write_all(&d).unwrap();
     }
     let broken = out.finish().unwrap().into_inner();

@@ -1,7 +1,7 @@
 //! Owned corpus: themes, several masters and layouts, shape effects (shadow, glow, soft edge,
 //! reflection) and hyperlinks and actions on text and shapes.
 //!
-//! The decks are built as PowerPoint writes them: a DeckCraft package whose theme, slides and
+//! The decks are built as PowerPoint writes them: a IrisDeck package whose theme, slides and
 //! relationships are replaced with PowerPoint-shaped XML, and a two-master deck built in the model.
 //! The check is open → save → reopen with nothing lost.
 
@@ -19,7 +19,7 @@ fn repack(bytes: &[u8], parts: &[(&str, String)]) -> Vec<u8> {
     let opts = zip::write::SimpleFileOptions::default();
     for i in 0..z.len() {
         let mut f = z.by_index(i).expect("entry");
-        let name = f.name().to_string();
+        let name = f.name().unwrap().to_string();
         if parts.iter().any(|(n, _)| *n == name) {
             continue;
         }
@@ -254,7 +254,7 @@ fn themes_masters_and_layouts_survive_a_round_trip() {
     let names = |bytes: &[u8]| {
         let z = zip::ZipArchive::new(Cursor::new(bytes)).expect("zip");
         let mut v: Vec<String> =
-            z.file_names().filter(|n| n.contains("theme") || n.contains("slideMaster") || n.contains("slideLayout")).map(str::to_string).collect();
+            z.file_names().map(|n| n.unwrap().to_string()).filter(|n| n.contains("theme") || n.contains("slideMaster") || n.contains("slideLayout")).collect();
         v.sort();
         v
     };

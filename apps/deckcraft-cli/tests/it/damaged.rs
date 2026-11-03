@@ -24,10 +24,11 @@ fn without_slide2(deck: &[u8]) -> Vec<u8> {
         let mut f = zin.by_index(i).unwrap();
         let mut data = vec![];
         f.read_to_end(&mut data).unwrap();
-        if f.name() == "ppt/slides/slide2.xml" {
+        let name = f.name().unwrap().to_string();
+        if name == "ppt/slides/slide2.xml" {
             data = b"<p:sld".to_vec();
         }
-        out.start_file(f.name(), options).unwrap();
+        out.start_file(name, options).unwrap();
         out.write_all(&data).unwrap();
     }
     out.finish().unwrap().into_inner()

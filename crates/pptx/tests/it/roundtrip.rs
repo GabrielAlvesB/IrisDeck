@@ -43,7 +43,7 @@ fn new_slide(p: &mut Presentation, title: &str) -> Slide {
 pub fn rich_deck() -> Presentation {
     let mut p = defaults::new_presentation(None);
     p.props.title = "Rich deck".into();
-    p.props.author = "DeckCraft tests".into();
+    p.props.author = "IrisDeck tests".into();
     p.props.created = "2025-01-02T03:04:05Z".into();
     let img = p.add_media("image1.png", "image/png", png(40, 30, [200, 40, 40])).expect("media");
     let img2 = p.add_media("image2.png", "image/png", png(8, 8, [20, 140, 220])).expect("media");
@@ -417,7 +417,7 @@ fn deck_level_round_trip() {
     assert_eq!(q.slide_size, p.slide_size);
     assert_eq!(q.first_slide_number, 0);
     assert_eq!(q.props.title, "Rich deck");
-    assert_eq!(q.props.author, "DeckCraft tests");
+    assert_eq!(q.props.author, "IrisDeck tests");
     assert_eq!(q.props.created, "2025-01-02T03:04:05Z");
     assert_eq!(
         q.sections.iter().map(|s| (s.name.clone(), s.slides.len())).collect::<Vec<_>>(),
@@ -1175,7 +1175,7 @@ fn wordart_warps_and_their_adjusts_round_trip() {
     let mut out = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
     for i in 0..zip.len() {
         let mut f = zip.by_index(i).expect("entry");
-        let name = f.name().to_string();
+        let name = f.name().unwrap().to_string();
         let mut data = vec![];
         std::io::Read::read_to_end(&mut f, &mut data).expect("read");
         if name == "ppt/slides/slide1.xml" {
@@ -1309,7 +1309,7 @@ fn transition_defaults_read_like_powerpoint() {
         let mut out = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
         for i in 0..zip.len() {
             let mut f = zip.by_index(i).expect("entry");
-            let name = f.name().to_string();
+            let name = f.name().unwrap().to_string();
             let mut data = vec![];
             std::io::Read::read_to_end(&mut f, &mut data).expect("read");
             if name == "ppt/slides/slide1.xml" {
@@ -1474,7 +1474,7 @@ fn an_embedded_font_list_already_in_the_package_is_read() {
     let mut out = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
     for i in 0..zip.len() {
         let mut f = zip.by_index(i).expect("entry");
-        let name = f.name().to_string();
+        let name = f.name().unwrap().to_string();
         let mut data = vec![];
         std::io::Read::read_to_end(&mut f, &mut data).expect("read");
         if name == "ppt/presentation.xml" {
@@ -1618,7 +1618,7 @@ fn patch_slides(bytes: Vec<u8>, from: &str, to: &str) -> Vec<u8> {
     let mut out = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
     for i in 0..z.len() {
         let mut f = z.by_index(i).expect("entry");
-        let name = f.name().to_string();
+        let name = f.name().unwrap().to_string();
         let mut data = vec![];
         f.read_to_end(&mut data).expect("read");
         if name.starts_with("ppt/slides/slide") && name.ends_with(".xml") {
@@ -1767,7 +1767,7 @@ fn repack(pkg: &[u8], edit: impl Fn(&str, String) -> String, extra: &[(&str, &[u
     let opts = zip::write::SimpleFileOptions::default();
     for i in 0..z.len() {
         let mut f = z.by_index(i).unwrap();
-        let name = f.name().to_string();
+        let name = f.name().unwrap().to_string();
         let mut data = vec![];
         f.read_to_end(&mut data).unwrap();
         if name.ends_with(".xml") || name.ends_with(".rels") {
@@ -1872,7 +1872,7 @@ fn chartex_waterfall_reads_and_round_trips() {
     assert_eq!(again.subtotals, c.subtotals);
 }
 
-/// New Office 2016 charts made in DeckCraft are written as chartEx parts that read back as the
+/// New Office 2016 charts made in IrisDeck are written as chartEx parts that read back as the
 /// same type, data and options.
 #[test]
 fn chartex_new_charts_save_as_their_own_type() {

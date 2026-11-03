@@ -43,7 +43,7 @@ fn talk() -> Presentation {
     let mut p = defaults::new_presentation(None);
     p.props.title = "Quarterly review".into();
     p.props.subject = "Owned corpus".into();
-    p.props.author = "DeckCraft tests".into();
+    p.props.author = "IrisDeck tests".into();
     let img = p.add_media("mark.png", "image/png", png(4, 4, [20, 90, 160])).expect("media");
 
     {
@@ -127,7 +127,7 @@ impl Pkg {
             if f.is_dir() {
                 continue;
             }
-            let name = f.name().trim_start_matches('/').to_string();
+            let name = f.name().unwrap().trim_start_matches('/').to_string();
             let mut data = vec![];
             f.read_to_end(&mut data).expect("read");
             parts.insert(name, data);
@@ -362,7 +362,7 @@ fn owned_corpus_round_trip_keeps_parts_and_text() {
         "Amount due",
         "Ada checks the axis",
         "Owned corpus",
-        "DeckCraft tests",
+        "IrisDeck tests",
         "https://example.org/north?q=1&x=2",
         "Open the report",
     ] {
