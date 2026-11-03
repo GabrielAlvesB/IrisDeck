@@ -4,9 +4,9 @@ updates:
   - package-ecosystem: "cargo"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
       time: "06:00"
-      timezone: "America/New_York"
+      timezone: "America/Sao_Paulo"
     # Consolidate updates into a single PR rather than one PR per crate
     groups:
       cargo-dependencies:
@@ -19,9 +19,9 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
       time: "06:00"
-      timezone: "America/New_York"
+      timezone: "America/Sao_Paulo"
     groups:
       actions:
         patterns:
